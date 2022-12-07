@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="block">{{ block['name'] }}</h2>
+
+    <span class="timer" id="timer"></span>
+    <progress max="{{ block['time'] }}" value="{{ block['name'] }}" class="progress progress--set" id="progressBar"></progress>
+    <br>
+    <center>
+    <button class="btn btn-dark btn-lg entry-btn" onclick="start_stop()" id="start_stop">Pause</button>
+    <button class="btn btn-dark btn-lg entry-btn" onclick="home()" id="home">Home</button>
+    </center>
+    <br>
+    {% if timer %} 
+    <div class="table-frame">
+    <table id='time_block_table' class="table">
+        <thead>
+            <tr>
+                <th>Block Name</th>
+                <th>Time (s)</th>
+            </tr>
+        </thead>
+        <tbody id="exercises">
+                      {% for block in timer %}
+                <tr>
+                    <td>{{ block.name }}</td>
+                    <td>{{ block.time }}</td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+{% endif %}
+
+    <script type="application/javascript">
+        const timerElement = document.getElementById("timer");
+        const progressBar = document.getElementById("progressBar")
+
+        var timerCounter = progressBar.max;
+        var isPaused = false;
+
+        function s_to_m(timerCounter) {
+            var minutes = Math.floor(timerCounter / 60);
+            return minutes
+        }
+
+        function s_to_s(timerCounter) {
+            var seconds = timerCounter - s_to_m(timerCounter) * 60;
+            return seconds
+        }
+        
+        var timerCounter = progressBar.max;
+
+        progressBar.value = timerCounter;
+        timerElement.innerText = s_to_m(timerCounter) + "M " + s_to_s(timerCounter) + "S";
+ 
+        const interval = setInterval(() => {
+
+            if (timerCounter == 0) {
+                window.location.href = "{{ url_for('timer.timer') }}";
+                clearInterval(interval);
+            }
+            
+            if (!isPaused) {
+ 
+                if (timerCounter != 0) {
+                    timerCounter = timerCounter - 1;
+                }
+
+                timerElement.innerText = s_to_m(timerCounter) + "M " + s_to_s(timerCounter) + "S";
+                progressBar.value = timerCounter;
+                
+            }
+        }, 1000);
+
+        function start_stop(){
+
+            var elem = document.getElementById("start_stop");
+        
+            if (!isPaused) {
+                isPaused = true;
+                elem.innerText = "Resume";
+            }
+
+            else {
+            isPaused = false;
+            elem.innerHTML= "Pause";
+            }
+        }
+
+        function home(){
+            window.location.href = "{{ url_for('entry.index') }}";
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,270 @@
+@import url(https://fonts.googleapis.com/css?family=Bungee+Shade);
+@import url(https://fonts.googleapis.com/css?family=Bungee);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Mono);
+
+html {
+    background: #72757e;
+    padding: 1rem;
+    font-family: 'Roboto Mono'
+  }
+  
+  body {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #16161a;
+    border-radius: 15px;
+
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bungee';
+    color: #fffffe;
+    margin: 1rem 0;
+  }
+  
+  a, .user {
+    color: #fffffe;
+    font-family: 'Roboto Mono'
+  }
+  
+  a:hover {
+    color: #7f5af0;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid lightgray;
+  }
+
+  .entry-btn {
+    background-color: #7f5af0;
+    margin-right: 5px;
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-align: center;
+  }
+
+  .wrapper {
+    text-align: center;
+    width: 100%;
+  }
+
+  time-block-table {
+    text-align: middle !important;
+    color:#cc2f2e
+  }
+
+  label {
+    color: #94a1b2;
+    font-family: 'roboto mono';
+    font-size: medium;
+  }
+
+  .timer {
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    color: #2cb67d;
+  }
+
+  .block {
+    color: #2cb67d;
+  }
+
+  .entry-btn:hover {
+    background-color: #94a1b2;
+  }
+
+  .btn-divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}
+  
+  nav {
+    background: #16161a;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    border-radius: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .nav-home  {
+    color: #fffffe;
+    font-family: 'Bungee';
+
+  }
+  
+  .timer-entry-help {
+    color: #94a1b2;
+    text-align: center;
+    font-family: 'roboto mono';
+    font-size: medium;
+    
+  } 
+
+.timer-entry {
+    color: #94a1b2 !important;
+    font-family: 'roboto mono' !important;
+    font-size: medium !important;
+  } 
+  
+  nav h1 {
+    flex: auto;
+    margin: 0;
+  }
+  
+  nav h1 a {
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  nav ul  {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li a, nav ul li span, header .action {
+    display: block;
+    padding: 0.5rem;
+  }
+  
+  .content {
+    padding: 0 1rem 1rem;
+  }
+  
+  .content > header {
+    border-bottom: 2px solid;   
+    color: #fffffe;
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .content > header h1 {
+    flex: auto;
+    margin: 1rem 0 0.25rem 0;
+  }
+  
+  .flash {
+    margin: 1em 0;
+    padding: 1em;
+    background: #fffffe;
+    color: #F56565;
+    font-family: 'roboto mono';
+    font-size: medium;
+    font-weight: bold;
+    border-radius: 15px;
+    text-align: center;
+
+  }
+ 
+  
+  .content:last-child {
+    margin-bottom: 0;
+  }
+  
+  .content form {
+    margin: 1em 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .content label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .content input, .content textarea {
+    margin-bottom: 1em;
+  }
+  
+  .content textarea {
+    min-height: 12em;
+    resize: vertical;
+  }
+  
+  input.danger {
+    color: #cc2f2e;
+  }
+  
+  input[type=submit] {
+    align-self: start;
+    min-width: 10em;
+  }
+
+  .timer {
+    display: block;
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: .75rem;
+  }
+
+  .block {
+    display: block;
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: .75rem;
+  }
+
+  .progress {
+    height: 50px;
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    border: 0px solid #cdc7c2;
+    background-image: none;
+    -webkit-appearance: none;
+    border-radius: 15px;
+}
+
+.progress,
+.progress::-webkit-progress-bar {
+    background-color: #fffffe;
+}
+
+.progress--set::-webkit-progress-value {
+    background-color: #F56565;
+}
+
+.progress--set::-moz-progress-bar {
+    background-color: #F56565;
+}
+
+.table-frame {
+  border-radius: 15px;
+  border: 15px solid #2cb67d;
+}
+
+.table {
+  border-collapse: collapse;
+  margin-bottom: 0px;
+}
+
+.table th {
+  text-align: center;
+  color: #fffffe;
+  font-family: 'roboto mono';
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.table td {
+  text-align: center;
+  vertical-align: middle;
+  color: #2cb67d;
+  font-family: 'roboto mono';
+  font-weight: bold;
+  border: 2px solid;
+  border-inline-style: none;
+}
+
+.form-text {
+  text-align: center;
+}

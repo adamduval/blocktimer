@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{%block content %}
+<form method="post">
+    <label for="time_block">Enter Timer Name</label>
+    <input name="timer_name" id="timer_name" value="{{ request.form['timer_name'] }}" required>
+    <button type="submit">Save</button>
+</form>
+
+<table id='time_block_table' class="table table-striped">
+    <thead>
+        <tr>
+            <th>Block Name</th>
+            <th>Time(s)</th>
+        </tr>
+    </thead>
+    <tbody id="exercises">
+                  {% for block in timer %}
+            <tr>
+                <td>{{ block.name }}</td>
+                <td>{{ block.time }}</td>
+            </tr>
+            {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

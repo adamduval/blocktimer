@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}BlockTimer{% endblock %}
+
+{% block content %}
+    <br>
+    <form method="post">
+        <small class="timer-entry">Enter A Time Block</small>
+        <label for="time_block"></label>
+        <input name="time_block" id="time_block" value="{{ request.form['time_block'] }}" required autofocus>
+        <input type="submit" hidden>
+        <small class="timer-entry-help" >Enter a time block name followed by duration in minutes and or seconds <br> (Run 75s, Study 30m, Meditate 5m, Breathe deep 2m30s)</small>
+    </form>
+
+    {% if timer_name %}
+    <h1>{{ timer_name }}</h1>
+    {% else %}
+    {% endif %}
+
+    {% if timer %} 
+    <div class="table-frame">
+    <table id='time_block_table' class="table">
+        <thead>
+            <tr>
+                <th>Block Name</th>
+                <th>Time (s)</th>
+            </tr>
+        </thead>
+        <tbody id="exercises">
+                {% for block in timer %}
+                <tr>
+                    <td>{{ block.name }}</td>
+                    <td>{{ block.time }}</td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+    </div> 
+    {% else %}
+    {% endif %}
+
+        <div class="wrapper" style="text-align: center">
+            <br>
+        <span>
+            <a href="{{ url_for('timer.timer') }}" class="btn btn-dark btn-lg entry-btn">Start</a>
+            <a href="{{ url_for('entry.clear') }}" class="btn btn-dark btn-lg entry-btn">Clear</a>
+            <a href="{{ url_for('entry.load') }}" class="btn btn-dark btn-lg entry-btn">Load</a>
+            <a href="{{ url_for('entry.save') }}" class="btn btn-dark btn-lg entry-btn">Save</a>
+        </span>
+    </div>
+    <br>
+
+{% endblock %}
