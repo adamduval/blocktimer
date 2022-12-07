@@ -1,11 +1,7 @@
-from datetime import datetime
 from operator import itemgetter
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, redirect, render_template, request, session, url_for
 )
-from werkzeug.exceptions import abort
-
 from blocktimer.auth import login_required
 from blocktimer.db import get_db
 from blocktimer.helpers import parse_time_block
@@ -14,41 +10,32 @@ bp = Blueprint('entry', __name__)
 
 
 @bp.route('/', methods=['GET', 'POST'])
-def index():
+def entry():
 
-    #DEBUG
-    print('/INDEX')
-
-    # clear loaded timer if returning from timer home button
+    # Clear loaded timer if returning from timer home button on other routes
     if 'loaded_timer' in session:
         session.pop('loaded_timer')
 
-    # Initialize session, ensure endpoint does not clear current stored timer
+    # Initialize session, ensure endpoint does not clear current timer
     if 'timer' not in session:
-
-        #DEBUG
-        print('INDEX: timer not in session')
-        
         session['timer'] = []
         return render_template('blocktimer/index.html', timer=session['timer'])
 
+    # Post request to enter a time block
     if request.method == 'POST':
-
-        #DEBUG
-        print('INDEX: post loop')
-
         input_time_block = request.form['time_block']
         error = None
 
         try:
             parsed_time_block = parse_time_block(input_time_block)
             print(parsed_time_block)
+
             if not parsed_time_block['name']:
                 error = "Please enter time block name as well as time"
                 flash(error)
 
         except ValueError:
-            error = "Please use text number+m,+s or number+m/number+s  format"
+            error = "Please use text number+m,+s or number+m/number+s format"
             flash(error)
 
         if error is None:
@@ -59,14 +46,13 @@ def index():
         return redirect(url_for('index'))
 
     else:
-
-        #DEBUG
-        print('INDEX: non post loop')
-        
         return render_template('blocktimer/index.html', timer=session['timer'])
+
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+
+    # Login request
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -76,11 +62,13 @@ def login():
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
 
+        # Login error
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
+        # Login success
         if error is None:
             session.clear()
             session['user_id'] = user['id']
@@ -94,52 +82,60 @@ def login():
 @bp.route('/logout')
 @login_required
 def logout():
+
     session.clear()
     return redirect(url_for('index'))
 
 
 @bp.route('/load', methods=['GET', 'POST'])
 @login_required
-def load():    
+def load():
 
-    print('LOAD')
+    # Get list of saved timer
+    if request.method == 'GET':
 
-    if request.method=='GET':
         db = get_db()
-            # get list of timer names and dates 0=name, 1=ts, 2=id
         timers = db.execute(
-            'SELECT timer.timer_name, timer.created, timer.id FROM timer inner join user on timer.author_id=user.id').fetchall()
-            
+            'SELECT timer.timer_name, timer.created, timer.id\
+             FROM timer innerjoin user on timer.author_id=user.id'
+             ).fetchall()
+
         return render_template('blocktimer/load.html', timers=timers)
 
-    if request.method=='POST':
-        
-        print('POST')
+    # Load a specific saved timer to use
+    if request.method == 'POST':
 
         id = request.form['timer_id']
-        
-        # get time blocks
-        db = get_db()
-            # 0=block, 1=time, 2=num
-        timer = db.execute(
-            'SELECT time_block.block, time_block.time, time_block.block_num, timer.timer_name FROM time_block inner join timer on time_block.timer_id=timer.id').fetchall()
 
+        db = get_db()
+
+        # Get blocks
+        timer = db.execute(
+            'SELECT time_block.block, time_block.time,\
+             time_block.block_num, timer.timer_name FROM time_block inner join\
+             timer on time_block.timer_id=timer.id'
+             ).fetchall()
+
+        # Get name
         timer_name = db.execute(
-            'SELECT timer.timer_name FROM timer where id = ?',(id)).fetchone()[0]
-        
+            'SELECT timer.timer_name FROM timer where id = ?', (id)
+            ).fetchone()[0]
+
+        # NOTE - what does this do again
         # sort by num and return list of {name:, time:} blocks
         timer_sort = sorted(timer, key=itemgetter(2))
         timer = []
         for block in timer_sort:
-            timer.append({'name' : block[0], 'time' :block[1]})
+            timer.append({'name': block[0], 'time': block[1]})
 
+        # Clear any previously saved session timer
         session['timer'].clear()
-        session['timer'] = timer    
 
-        print(timer)
-        print(session['timer'])
+        # Load timer into session
+        session['timer'] = timer
 
-        return render_template('blocktimer/index.html', timer=timer, timer_name=timer_name)
+        return render_template('blocktimer/index.html', timer=timer,
+                               timer_name=timer_name)
 
 @bp.route('/save', methods=['GET', 'POST'])
 @login_required
