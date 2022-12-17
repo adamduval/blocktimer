@@ -1,9 +1,7 @@
-from ast import Try
-
-
 def parse_time_block(text):
     """
-    Given a time block "Name Time(M)Time(s)" return parsed block {name: 'name', time: 'time(s)'}
+    Given a time block "Name Time(M)Time(s)" return parsed block {name: 'name',
+     time: 'time(s)'}
 
     >>> parse_time_block('Run 1m')
     {'name': 'run', 'time': 60}
@@ -15,7 +13,7 @@ def parse_time_block(text):
     {'name': 'run', 'time': 90}
 
     """
-    units =['m', 's']
+    units = ['m', 's']
 
     split = text.lower().split()
 
@@ -36,7 +34,7 @@ def parse_time_block(text):
     name = ' '.join(split)
 
     if not name:
-        print('no name') # todo
+        print('no name')  # todo
 
     return {'name': name, 'time': time}
 

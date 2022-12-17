@@ -10,7 +10,7 @@ bp = Blueprint('entry', __name__)
 
 
 @bp.route('/', methods=['GET', 'POST'])
-def entry():
+def index():
 
     # Clear loaded timer if returning from timer home button on other routes
     if 'loaded_timer' in session:
@@ -137,14 +137,15 @@ def load():
         return render_template('blocktimer/index.html', timer=timer,
                                timer_name=timer_name)
 
+
 @bp.route('/save', methods=['GET', 'POST'])
 @login_required
 def save():
 
-    if request.method=='GET':
+    if request.method == 'GET':
         return render_template('blocktimer/save.html', timer=session['timer'])
 
-    if request.method=='POST':
+    if request.method == 'POST':
         db = get_db()
         timer_name = (request.form['timer_name'])
         timer = session['timer']
@@ -161,7 +162,7 @@ def save():
             try:
 
                 # ts = datetime.now() - not needed handles in db
-                
+
                 db.execute(
                     'INSERT INTO timer (author_id, timer_name) VALUES (?,?)',
                     (id, timer_name),
@@ -180,25 +181,27 @@ def save():
         try:
             # get timer id key
             timer_id = db.execute(
-            'SELECT id FROM timer WHERE timer_name = ?', (timer_name,)).fetchone()[0] #TODO understand why:
-        
+                        'SELECT id FROM timer WHERE timer_name = ?', 
+                        (timer_name,)).fetchone()[0]  # TODO understand why:
+
         except db.IntegrityError:
             error = f"User {timer_id} does not exist."
 
-        
-        for i, block in  enumerate(session['timer']):
-            block_num= i
+        for i, block in enumerate(session['timer']):
+            block_num = i
 
             db.execute(
-                    'INSERT INTO time_block (timer_id, block, time, block_num) VALUES (?,?,?,?)',
-                    (timer_id, block['name'],block ['time'], block_num),
+                    'INSERT INTO time_block (timer_id, block, time, block_num)\
+                    VALUES (?,?,?,?)',
+                    (timer_id, block['name'], block['time'], block_num),
                 )
             db.commit()
 
-        return render_template('blocktimer/index.html', timer=session['timer'], name=timer_name)
+        return render_template('blocktimer/index.html', timer=session['timer'],
+                               name=timer_name)
 
 
 @bp.route('/clear', methods=['GET', 'POST'])
-def clear():    
+def clear():
     session.pop('timer')
     return redirect(url_for('index'))

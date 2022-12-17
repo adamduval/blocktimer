@@ -1,6 +1,4 @@
 import functools
-from pickle import NONE
-from sqlite3 import dbapi2
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for

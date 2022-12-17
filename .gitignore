@@ -17,3 +17,5 @@ build/
 *.code-workspace
 
 ref/
+
+documentation/
