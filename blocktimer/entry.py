@@ -91,14 +91,16 @@ def logout():
 @login_required
 def load():
 
-    # Get list of saved timer
+    # Get list of saved timers
     if request.method == 'GET':
+
+        user = int((session["user_id"]))
 
         db = get_db()
         timers = db.execute(
             'SELECT timer.timer_name, timer.created, timer.id\
-             FROM timer innerjoin user on timer.author_id=user.id'
-             ).fetchall()
+             FROM timer WHERE timer.author_id = ?',
+             (user,)).fetchall()
 
         return render_template('blocktimer/load.html', timers=timers)
 
@@ -112,13 +114,12 @@ def load():
         # Get blocks
         timer = db.execute(
             'SELECT time_block.block, time_block.time,\
-             time_block.block_num, timer.timer_name FROM time_block inner join\
-             timer on time_block.timer_id=timer.id'
-             ).fetchall()
+             time_block.block_num FROM time_block WHERE time_block.timer_id = ?',
+            (id,)).fetchall()
 
         # Get name
         timer_name = db.execute(
-            'SELECT timer.timer_name FROM timer where id = ?', (id)
+            'SELECT timer.timer_name FROM timer WHERE id = ?', (id)
             ).fetchone()[0]
 
         # NOTE - what does this do again
@@ -145,6 +146,7 @@ def save():
     if request.method == 'GET':
         return render_template('blocktimer/save.html', timer=session['timer'])
 
+    # Save loaded timer
     if request.method == 'POST':
         db = get_db()
         timer_name = (request.form['timer_name'])
@@ -157,12 +159,9 @@ def save():
         elif not timer:
             error = 'No timer to save'
 
-        # save in timer table
+        # Save name in timer table
         if error is None:
             try:
-
-                # ts = datetime.now() - not needed handles in db
-
                 db.execute(
                     'INSERT INTO timer (author_id, timer_name) VALUES (?,?)',
                     (id, timer_name),
@@ -173,19 +172,17 @@ def save():
                 error = f"User {timer_name} is already used."
 
         else:
-            print('t-save')
             return redirect(url_for("entry.save"))
 
-        # save blocks in time block table
-
+        # Save blocks in time block table
         try:
-            # get timer id key
+            # Get timer id key from timer table
             timer_id = db.execute(
                         'SELECT id FROM timer WHERE timer_name = ?', 
-                        (timer_name,)).fetchone()[0]  # TODO understand why:
+                        (timer_name,)).fetchone()[0]
 
         except db.IntegrityError:
-            error = f"User {timer_id} does not exist."
+            error = f"{timer_id} does not exist."
 
         for i, block in enumerate(session['timer']):
             block_num = i

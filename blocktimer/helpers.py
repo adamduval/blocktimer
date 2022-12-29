@@ -17,7 +17,7 @@ def parse_time_block(text):
 
     split = text.lower().split()
 
-    # determine if time was entered in minutes or seconds and process
+    # Determine if time was entered in minutes or seconds and process
     split_time = split.pop(-1)
     if all(x in split_time for x in units):
         split_m = split_time.split('m')
@@ -26,15 +26,15 @@ def parse_time_block(text):
         time = time_ms + time_s
     elif 'm' in split_time:
         time = split_time.strip('m')
-        # convert minutes to seconds
+        # Convert minutes to seconds
         time = int(time) * 60
     else:
         time = int(split_time.strip('s'))
-    # concat text
+    # Concat text
     name = ' '.join(split)
 
     if not name:
-        print('no name')  # todo
+        print('no name')  #TODO
 
     return {'name': name, 'time': time}
 

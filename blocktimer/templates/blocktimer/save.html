@@ -4,10 +4,10 @@
 <form method="post">
     <label for="time_block">Enter Timer Name</label>
     <input name="timer_name" id="timer_name" value="{{ request.form['timer_name'] }}" required>
-    <button type="submit">Save</button>
+    <button type="submit" class="entry-btn">Save</button>
 </form>
 
-<table id='time_block_table' class="table table-striped">
+<table id='time_block_table' class="table">
     <thead>
         <tr>
             <th>Block Name</th>
